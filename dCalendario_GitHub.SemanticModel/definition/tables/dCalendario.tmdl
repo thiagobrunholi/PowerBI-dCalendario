@@ -1,0 +1,91 @@
+table dCalendario
+	lineageTag: 9fd4b265-c742-4494-b646-51fb920d3cf0
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 2f539955-2e87-4547-8816-8e0c7d9b6e56
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: a546811c-92c2-42a2-9184-68e503b63d66
+			defaultHierarchy: LocalDateTable_495a6baa-285d-45b7-9732-d43256204f21.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ano = YEAR(dCalendario[Data])
+		dataType: int64
+		formatString: 0
+		lineageTag: 01220ea9-577c-47e4-830f-e9b9e5bc0645
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column MesNome = FORMAT(dCalendario[Data], "mmmm")
+		dataType: string
+		lineageTag: a2757a43-81a7-4de6-95a1-08af5d7def21
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column MesAbrev = FORMAT(dCalendario[Data], "mmm")
+		dataType: string
+		lineageTag: 44f385d2-8d98-4e2b-bbf6-2d70301cdd39
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column MesAno = FORMAT(dCalendario[Data], "mmm-yyyy")
+		dataType: string
+		lineageTag: f9f1958b-9f8e-4bfc-b86b-86d75144a488
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column MesNum = MONTH(dCalendario[Data])
+		dataType: int64
+		formatString: 0
+		lineageTag: 638f4147-baf1-48c9-85f5-3651c98c3fc8
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column DiaSemana = FORMAT(dCalendario[Data], "dddd")
+		dataType: string
+		lineageTag: 88c558ea-4752-4dd9-a9da-eb855d003a47
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column DiaSemanaAbrev = FORMAT(dCalendario[Data], "ddd")
+		dataType: string
+		lineageTag: 8fc6304b-586b-451c-bd91-9e4c098c23d0
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column DiaSemanaNum = WEEKDAY(dCalendario[Data])
+		dataType: int64
+		formatString: 0
+		lineageTag: adcb43c0-53b5-4cfd-ab9b-fc72e3bffc35
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dCalendario = calculated
+		mode: import
+		source = CALENDAR(DATE(2024, 01, 01), DATE(2024, 12, 31))
+
+	annotation PBI_Id = 245f8800eecd4f81b9a38fb225479e27
+

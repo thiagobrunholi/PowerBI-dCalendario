@@ -16,7 +16,20 @@
           "nodeIndex": "dHora",
           "nodeLineageTag": "7ed9fc10-abf0-48dc-b4a5-ee9355e91431",
           "size": {
-            "height": 296,
+            "height": 342,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 285,
+            "y": 0
+          },
+          "nodeIndex": "dCalendario",
+          "nodeLineageTag": "9fd4b265-c742-4494-b646-51fb920d3cf0",
+          "size": {
+            "height": 340,
             "width": 234
           },
           "zIndex": 0

@@ -15,6 +15,9 @@ annotation PBI_QueryOrder = ["dHora"]
 annotation __PBI_TimeIntelligenceEnabled = 1
 
 ref table dHora
+ref table dCalendario
+ref table DateTableTemplate_2d86951c-fb6a-4743-9b34-1fabebdc4694
+ref table LocalDateTable_495a6baa-285d-45b7-9732-d43256204f21
 
 ref cultureInfo pt-BR
 

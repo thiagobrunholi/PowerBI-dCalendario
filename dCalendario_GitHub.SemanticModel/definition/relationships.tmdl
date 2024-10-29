@@ -1,0 +1,5 @@
+relationship a546811c-92c2-42a2-9184-68e503b63d66
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dCalendario.Data
+	toColumn: LocalDateTable_495a6baa-285d-45b7-9732-d43256204f21.Date
+
