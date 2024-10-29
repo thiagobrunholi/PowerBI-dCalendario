@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "dCalendario_GitHub"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "79b5a0fa-c109-4ba1-a423-c92123fad9c8"
+  }
+}
