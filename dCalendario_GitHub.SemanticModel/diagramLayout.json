@@ -7,7 +7,21 @@
         "x": 0,
         "y": 0
       },
-      "nodes": [],
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 0
+          },
+          "nodeIndex": "dHora",
+          "nodeLineageTag": "7ed9fc10-abf0-48dc-b4a5-ee9355e91431",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
       "name": "Todas as tabelas",
       "zoomValue": 100,
       "pinKeyFieldsToTop": false,

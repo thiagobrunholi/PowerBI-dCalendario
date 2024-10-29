@@ -1,0 +1,130 @@
+table dHora
+	lineageTag: 7ed9fc10-abf0-48dc-b4a5-ee9355e91431
+
+	column Hora
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 5a1aa0ab-f7c5-464e-aa83-abe6b91323f2
+		summarizeBy: none
+		sourceColumn: Hora
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column 'Hora Num'
+		dataType: int64
+		formatString: 0
+		lineageTag: d5b860f0-3d2f-4068-a72c-03764010cb04
+		summarizeBy: sum
+		sourceColumn: Hora Num
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Minuto Num'
+		dataType: int64
+		formatString: 0
+		lineageTag: a7befe68-f829-48ef-bfa0-35ab01e89d19
+		summarizeBy: sum
+		sourceColumn: Minuto Num
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Segundo Num'
+		dataType: int64
+		formatString: 0
+		lineageTag: ca33bd40-81f0-45af-a4b9-5f6a13cd77a9
+		summarizeBy: sum
+		sourceColumn: Segundo Num
+
+		annotation SummarizationSetBy = Automatic
+
+	column AMPM
+		dataType: string
+		lineageTag: f2f45ea9-99e7-434c-99b2-d57f6fd0f4c5
+		summarizeBy: none
+		sourceColumn: AMPM
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hora AMPM'
+		dataType: string
+		lineageTag: 790e559e-7f37-4928-b1d4-994510b3002e
+		summarizeBy: none
+		sourceColumn: Hora AMPM
+
+		annotation SummarizationSetBy = Automatic
+
+	column Período
+		dataType: string
+		lineageTag: 5c9cbc6b-b7a4-48f2-8d31-6276e841b8e1
+		summarizeBy: none
+		sourceColumn: Período
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Período Ordem'
+		dataType: int64
+		formatString: 0
+		lineageTag: 631e5438-e387-4689-a2ae-a85ca7460e73
+		summarizeBy: sum
+		sourceColumn: Período Ordem
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Faixa Hora'
+		dataType: string
+		lineageTag: c58ef626-6813-4058-943d-e6d8567416b3
+		summarizeBy: none
+		sourceColumn: Faixa Hora
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dHora = m
+		mode: import
+		source = ```
+				let
+				    Lista = {0 .. 86399}, 
+				    ConverteParaTabela = Table.FromList( Lista, Splitter.SplitByNothing(), null, null, ExtraValues.Error ),
+				    AlteraTipo = Table.TransformColumnTypes(ConverteParaTabela, {{"Column1", Int64.Type}}),
+				    AlteraNomeCol = Table.RenameColumns(AlteraTipo, {{"Column1", "Segundo"}}),
+				    ColDuracao = Table.AddColumn( AlteraNomeCol, "Duração", each #duration(0, 0, 0, [Segundo]), type duration ),
+				    ColHora = Table.AddColumn( ColDuracao, "Hora", each #time(Duration.Hours([Duração]), Duration.Minutes([Duração]), Duration.Seconds([Duração])), type time ),
+				    RemoveCols = Table.RemoveColumns(ColHora, {"Duração", "Segundo"}),
+				    ColHoraNum = Table.AddColumn(RemoveCols, "Hora Num", each Time.Hour([Hora]), Int64.Type),
+				    ColMinutoNum = Table.AddColumn(ColHoraNum, "Minuto Num", each Time.Minute([Hora]), Int64.Type),
+				    ColSegundoNum = Table.AddColumn(ColMinutoNum, "Segundo Num", each Time.Second([Hora]), Int64.Type),
+				    ColAMPM = Table.AddColumn( ColSegundoNum, "AMPM", each if [Hora Num] < 12 then "AM" else "PM", type text ),
+				    ColHoraAMPM = 
+				        Table.AddColumn( ColAMPM, "Hora AMPM", each
+				        if      [Hora Num] = 0 then "12 AM"
+				        else if [Hora Num] >= 1 and [Hora Num] <= 11 then Number.ToText([Hora Num]) & " AM"
+				        else if [Hora Num] = 12 then "12 PM"
+				        else if [Hora Num] >= 13 then Number.ToText([Hora Num] - 12) & " PM"
+				        else "Unknown", type text 
+				        ),
+				    ColPeriodo = 
+				        Table.AddColumn( ColHoraAMPM, "Período", each
+				        if      [Hora Num] >= 0 and [Hora Num] <= 5 then "12AM to 6AM"
+				        else if [Hora Num] >= 6 and [Hora Num] <= 11 then "6AM to 12PM"
+				        else if [Hora Num] >= 12 and [Hora Num] <= 17 then "12PM to 6PM"
+				        else if [Hora Num] >= 18 and [Hora Num] <= 23 then "6PM to 12AM"
+				        else "Unknown", type text 
+				        ),
+				    ColPeriodoOrdem = 
+				        Table.AddColumn( ColPeriodo, "Período Ordem", each
+				        if      [Hora Num] >= 0 and [Hora Num] <= 5 then 1
+				        else if [Hora Num] >= 6 and [Hora Num] <= 11 then 2
+				        else if [Hora Num] >= 12 and [Hora Num] <= 17 then 3 
+					else if [Hora Num] >= 18 and [Hora Num] <= 23 then 4
+				        else 5, Int64.Type 
+				    ),
+				    FaixaHora = Table.AddColumn(ColPeriodoOrdem, "Faixa Hora", each Text.Combine({Text.Start(Text.From([Hora], "pt-BR"), 2), "h"}), type text)
+				in
+				    FaixaHora
+				```
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
